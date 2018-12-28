@@ -6,15 +6,16 @@
 Welcome to bos-mint's documentation!
 ====================================
 
-The purpose of these tools is to serve the witnesses and assist them
-with their regular ground work of managing events on the PeerPlays
-blockchain.
+Bos-mint is a flask based application that can be used to
+serve the witnesses and assist them with their regular ground
+work of managing events on the PeerPlays blockchain.
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
 
    installation
+   development
    bos_mint
 
 Indices and tables
