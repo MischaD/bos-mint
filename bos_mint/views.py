@@ -67,6 +67,8 @@ from bos_mint.datestring import string_to_date
 
 @app.route('/favicon.ico')
 def favicon():
+    """:return: .ico file that is used as the icon in the top left corner of the tab
+    """
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
@@ -955,7 +957,6 @@ def bet_new():
 @app.route("/sport/delete/<selectId>", methods=['post', 'get'])
 @unlocked_wallet_required
 def sport_delete(selectId=None):
-    """If this button is pressed a form will be opened to delete the Sport with a given selectId"""
     form = DeleteForm(sport_id=selectId)
     sport = Sport(selectId)
     formTitle = "Are you sure that you want do delete {0} ({1})?".format(sport['name'][0][1], sport['id'])
@@ -996,6 +997,15 @@ def eventgroup_delete(selectId=None):
 
 
 def genericUpdate(formClass, selectId, removeSubmits=False):
+    """ This method is used to render update/details forms for any formClass you specify
+
+        :param FlaskForm formClass: Class of the form that you want to create. You can choose from a
+            list of implemented classes in bos_mint.forms
+        :param selectId: Identifier of the sport/event/etc. to be updated
+
+        :param bool removeSubmits: If True removes the submit Button from the from (defaults to ``False``)
+
+        """
     typeName = formClass.getTypeName()
 
     selectFunction = utils.getTypeGetter(typeName)
@@ -1279,3 +1289,10 @@ def bettingmarketgroup_cancel(selectId=None):
     Node().cancelBettingMarketGroup(selectId)
     return redirect(utils.processNextArgument(
                     request.args.get('next'), 'index'))
+
+
+@app.route("/proposal_delete", methods=['GET', 'POST'])
+#wallet required
+def proposal_delete():
+    #Should only work if you are marked as a trusted witness in the config ??
+    return "Proposal wurde deleted"
