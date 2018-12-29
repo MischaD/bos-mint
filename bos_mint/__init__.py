@@ -51,8 +51,9 @@ class Config():
     def load(config_files=[], relative_location=False):
         """ Load configuration from a file
 
-            :param str file_name: (defaults to ['config-defaults.yaml']) File name and
-                path to load config from
+            :param str config_files: (defaults to ['config-defaults.yaml']) File name and
+                paths to the configuration files
+            :param bool relative_location: Is the path the relative or the absolute path to the location
         """
 
         if not Config.data:
@@ -166,19 +167,6 @@ class Config():
                     d[k] = v
         return d
 
-#TODO: Test the purpose of this if case on a working environment
-if not Config.data and False:
-    Config.load("config-defaults.yaml")
-    notify = False
-    try:
-        # overwrites defaults
-        Config.load("config-bos-mint.yaml", True)
-        notify = True
-    except FileNotFoundError:
-        pass
-
-    if notify:
-        logging.getLogger(__name__).info("Custom config has been loaded " + Config.source)
 
 def get_config():
     """This function is used to retrieve the configuration as defined in config-defaults.yaml and config-bos-mint.yaml
@@ -190,7 +178,7 @@ def get_config():
     notify = False
     try:
         # overwrites defaults
-        Config.load("../config-bos-mint.yaml", True)
+        Config.load("config-bos-mint.yaml")
         notify = True
     except FileNotFoundError:
         pass
