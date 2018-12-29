@@ -11,8 +11,10 @@ Submodules
 
    bos_mint.assets
    bos_mint.cli
+   bos_mint.datestring
    bos_mint.forms
    bos_mint.istring
+   bos_mint.menu_info
    bos_mint.models
    bos_mint.node
    bos_mint.tostring
