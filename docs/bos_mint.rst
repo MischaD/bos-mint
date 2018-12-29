@@ -1,5 +1,8 @@
 bos\_mint package
 =================
+This module is used to initialize and configure the Flask application \
+used to communicate with peerplays in the typical Flask fashion \
+as described in the  `Flask documentation <http://flask.pocoo.org/docs/1.0/api/>`_.
 
 Submodules
 ----------
@@ -24,5 +27,4 @@ Module contents
 
 .. automodule:: bos_mint
     :members:
-    :undoc-members:
-    :show-inheritance:
+

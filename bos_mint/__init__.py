@@ -13,8 +13,12 @@ import collections
 from copy import deepcopy
 import io
 
-
 def get_version():
+    """Get the bos-mint version number
+
+    :return: version
+    :rtype: str
+    """
     try:
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'VERSION')) as version_file:
             return version_file.read().strip()
@@ -29,21 +33,25 @@ __VERSION__ = get_version()
 class Config():
     """ This class allows us to load the configuration from a YAML encoded
         configuration file.
+
+        - **Errors**: A few errors that occur repeatedly
+        - **config**: class variable that saves the configurations that were loaded :meth:`Config.load()`
+        - **source**: config-file names
     """
 
     ERRORS = {
         "secret_key": "Please create a configuration file config-bos-mint.yaml in your working directory with a secret_key entry, see config-example.yaml",
         "connection.use": "Please create a configuration file config-bos-mint.yaml in your working directory with a connection.use entry, see config-example.yaml"
     }
-
+    #
     data = None
     source = None
 
     @staticmethod
     def load(config_files=[], relative_location=False):
-        """ Load config from a file
+        """ Load configuration from a file
 
-            :param str file_name: (defaults to ['config.yaml']) File name and
+            :param str file_name: (defaults to ['config-defaults.yaml']) File name and
                 path to load config from
         """
 
@@ -74,7 +82,7 @@ class Config():
 
     @staticmethod
     def get_config(config_name=None):
-        """ Static method that returns the configuration as dictionary.
+        """ Static method that returns the configuration as dictionary. \
             Usage:
 
             .. code-block:: python
@@ -92,19 +100,16 @@ class Config():
 
     @staticmethod
     def get(*args, **kwargs):
-        """
-        This config getter method allows sophisticated and encapsulated access to the config file, while
+        """This config getter method allows sophisticated and encapsulated access to the config file, while
         being able to define defaults in-code where necessary.
 
         :param args: key to retrieve from config, nested in order. if the last is not a string it is assumed to be the default, but giving default keyword is then forbidden
-        :type tuple of strings, last can be object
-        :param message: message to be displayed when not found, defaults to entry in ERRORS dict with the
+        :type args: tuple of strings
+        :param string message: message to be displayed when not found, defaults to entry in ERRORS dict with the
                                 key defined by the desired config keys in args (key1.key2.key2). For example
                                 Config.get("foo", "bar") will attempt to retrieve config["foo"]["bar"], and if
                                 not found raise an exception with ERRORS["foo.bar"] message
-        :type message: string
-        :param default: default value if not found in config
-        :type default: object
+        :param object default: default value if not found in config
         """
         default_given = "default" in kwargs
         default = kwargs.pop("default", None)
@@ -161,8 +166,8 @@ class Config():
                     d[k] = v
         return d
 
-
-if not Config.data:
+#TODO: Test the purpose of this if case on a working environment
+if not Config.data and False:
     Config.load("config-defaults.yaml")
     notify = False
     try:
@@ -175,13 +180,17 @@ if not Config.data:
     if notify:
         logging.getLogger(__name__).info("Custom config has been loaded " + Config.source)
 
-
 def get_config():
+    """This function is used to retrieve the configuration as defined in config-defaults.yaml and config-bos-mint.yaml
+
+        :return: Dictionary with information about the application
+        :rtype: dict
+    """
     Config.load("config-defaults.yaml")
     notify = False
     try:
         # overwrites defaults
-        Config.load("config-bos-mint.yaml", True)
+        Config.load("../config-bos-mint.yaml", True)
         notify = True
     except FileNotFoundError:
         pass
@@ -200,6 +209,15 @@ def get_config():
 
 
 def set_global_logger():
+    """Creates a log folder in your working directory and logs the progress of the application.
+    Change DEBUG to True in the config File to add another level of documentation
+
+    :return: [trfh, sh] where trft is a `TimedRotatingFileHandler \
+    <https://docs.python.org/3/library/logging.handlers.html#timedrotatingfilehandler>`_ \
+    and sh is a `logging stream handler <https://docs.python.org/3/library/logging.handlers.html>`_
+
+    """
+
     # setup logging
     log_folder = os.path.join("dump", "logs")
     log_format = ('%(asctime)s %(levelname) -10s: %(message)s')
@@ -233,7 +251,11 @@ def set_global_logger():
 
 
 def set_flask_logger(flask_app, handlers):
-    # set app.logger from flask
+    """Set app logger from flask
+
+    :param flask_app: Flask Application
+    :type flask_app: :attr:`app`
+    :param handlers: logging Handlers """
     while len(app.logger.handlers) > 0:
         app.logger.removeHandler(app.logger.handlers[0])
 
@@ -242,6 +264,12 @@ def set_flask_logger(flask_app, handlers):
 
 
 def set_app_config(flask_app, config):
+    """Changes the Flask settings to the settings specified in config
+
+        :param flask_app: Flask application
+        :type flask_app: :attr:`app`
+        :param dict config: Configurations for the application.
+        """
     basedir = os.path.abspath(os.path.dirname(__file__))
 
     # Flask Settings
@@ -261,6 +289,13 @@ def set_app_config(flask_app, config):
 
 
 def set_peerplays_connection(config):
+    """Function that establishes the connection to peerplays.
+
+    :param dict config: Configurations. Usually loaded by :meth:`get_config()`
+    :raise ValueError: A Value Error is most likely raised because you didn't set up the blockchain correctly
+    :raise KeyError: Key Error None indicates that the program wasn't able to load the yaml file
+        make sure you are looking in the right directory
+    """
     use = config["connection"]["use"]
     connection_config = config["connection"][use]
 
@@ -268,10 +303,15 @@ def set_peerplays_connection(config):
     if connection_config.get("num_retries", None) is None:
         connection_config["num_retries"] = 3
 
-    set_shared_config(connection_config)
+    #set_shared_config(connection_config)
 
 
 def set_error_handling(flask_app):
+    """Sets the error handler to be used by flask in case of an internal server error
+
+        :param flask_app: Flask application object
+        :type flask_app: :attr:`app`
+    """
     def handle_exception(e):
         if isinstance(e, HTTPException):
             raise e
@@ -289,10 +329,9 @@ def set_error_handling(flask_app):
 
 
 config = get_config()
-
 log_handlers = set_global_logger()
 
-# Instanciate flask
+#: Flask application object as described in the `Flask documentation <http://flask.pocoo.org/docs/1.0/api/>`_
 app = Flask(__name__)
 
 set_flask_logger(app, log_handlers)
@@ -307,6 +346,8 @@ app.logger.debug(pprint.pformat(config))
 
 @app.before_first_request
 def before_first_request():
+    """Creates all database tables before the first flask request is executed
+    """
     try:
         db.create_all()
     except Exception as e:
@@ -315,4 +356,5 @@ def before_first_request():
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
+    """Removes changes to the database before the application is closed"""
     db.session.remove()
