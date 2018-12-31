@@ -12,6 +12,8 @@ from .menu_info import getMenuInfo
 
 # dictionary to configure types (Sport, EventGroup, etc.)
 #  title: human readable title
+
+# All typenames available in Peerplays
 TYPENAMES = {
     'sport': {'title': 'Sport'},
     'eventgroup': {'title': 'Event group'},
@@ -95,6 +97,7 @@ PARENT_TYPE = {
     'bet': 'bettingmarket'
 }
 
+# maps all available operations to a typename
 OP_TO_TYPENAME_MAP = {
     'sport_create': 'sport',
     'sport_delete': 'sport',

@@ -16,10 +16,12 @@ from bookied_sync.lookup import Lookup
 
 
 class NodeException(Exception):
+    """Exception that is thrown when the request is not correct"""
     pass
 
 
 class NonScalableRequest(NodeException):
+    """Usually raised, when the caller forgot to select a parent"""
     def __init__(self):
         NodeException.__init__(
             self,
@@ -28,6 +30,10 @@ class NonScalableRequest(NodeException):
 
 
 class BroadcastActiveOperationsExceptions(NodeException):
+    """The request failed, because the pending operations have to be broadcasted \
+    or cancelled first e.g. when the user wants to change his account, but still \
+    has pending operations
+    """
     def __init__(self):
         NodeException.__init__(self, 'Broadcast or cancel the pending operations first')
 
@@ -74,6 +80,7 @@ class Node(object):
         """
 
     def get_node(self):
+        """Getter Method for the singleton"""
         return shared_peerplays_instance()
 
     @proposedOperation

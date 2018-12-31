@@ -291,7 +291,7 @@ def set_peerplays_connection(config):
     if connection_config.get("num_retries", None) is None:
         connection_config["num_retries"] = 3
 
-    #set_shared_config(connection_config)
+    set_shared_config(connection_config)
 
 
 def set_error_handling(flask_app):

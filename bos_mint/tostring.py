@@ -3,12 +3,22 @@ from .istring import InternationalizedString
 
 
 def findEnglishOrFirst(listOfIStrings, desiredLanguage='en'):
+    """Returns the string of an entry in the list in a desired language. If the
+    String is not available in your desired language, it returns the \
+    first entry instead
+
+    :param listOfIStrings: list of strings to be checked for the desired \
+        language
+    :param desiredLanguage: Language you are looking for, defualts to 'en'
+    :returns: Internationalized String
+    :rtype: str
+    """
     return InternationalizedString.listToDict(listOfIStrings).get(
         desiredLanguage, listOfIStrings[0][1])
 
 
 def toString(toBeFormatted, object=None):
-
+    """.. TODO: Explain this and the whole module afterwards """
     if type(object).__name__ == "Event":
         if isinstance(toBeFormatted.get('name'), list):
             name = findEnglishOrFirst(toBeFormatted.get('name'))
