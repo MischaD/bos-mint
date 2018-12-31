@@ -203,13 +203,14 @@ class InternationalizedString(object):
         ("za", "Zhuang, Chuang"),
         ("zu", "Zulu"),
         ("unknown", "Unknown language"),
-    ]
+    ]  #:
     UNKNOWN = "Unknown"
 
     def __init__(self, country, text):
-        '''
-        Constructor
-        '''
+        """:param country: country code, must be in :attr:`LANGUAGES` or "Unknown"
+        :param text: used :meth:`getForm()`
+        :raises: :class:`LanguageNotFoundException`
+        """
         self.country = country
         self.text = text
 
@@ -219,6 +220,9 @@ class InternationalizedString(object):
             raise LanguageNotFoundException
 
     def getForm(self):
+        """returns a :class:`.InternationalizedStringForm`
+        with the text and the language defined in the :class:`contructor <InternationalizedString>`
+        """
         from bos_mint.forms import InternationalizedStringForm
         lng = InternationalizedStringForm()
         lng.country = self.country
@@ -227,10 +231,18 @@ class InternationalizedString(object):
 
     @classmethod
     def listToDict(cls, listOfIStrings):
+        """Converts a list to a dict
+
+        :param listOfIStrings: list to be converted
+        :returns: dict
+        """
         return {x[0]: x[1] for x in listOfIStrings}
 
     @classmethod
     def getChoices(cls):
+        """
+        :return: List of available languages as (languageCode, languageCode - language)
+        """
         return [
             (x[0], x[0] + " - " + x[1])
             for x in InternationalizedString.LANGUAGES
@@ -238,6 +250,12 @@ class InternationalizedString(object):
 
     @classmethod
     def parseToList(cls, fieldListOfInternationalizedString):
+        """Parse a TranslatedFieldForm with multiple translations to a list
+
+        :param fieldListOfInternationalizedString: :class:`.TranslatedFieldForm`
+        :returns: [[country, text], ...]
+        """
+        #: TODO: This is not very accurate
         from bos_mint.forms import TranslatedFieldForm
         from wtforms import FormField
 

@@ -42,6 +42,9 @@ def selectDictToList(sourceDictionary):
 def buildUpdateForm(typeName, selectChoices, newFormClass, selected=None):
     # All objects have their own Form for their creation. This reuses those
     # forms and adds a selection field
+    """Creates an UpdateForm to be used in views
+
+    """
     class _UpdateForm(FlaskForm):
         pass
 
@@ -110,6 +113,7 @@ validators = {
 
 
 class InternationalizedStringForm(FlaskForm):
+    """Creates a Form to choose from the available languages :meth:`bos_mint.istring`"""
     country = SelectField("Language",
                           validators=[DataRequired()],
                           choices=InternationalizedString.getChoices())
