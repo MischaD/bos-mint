@@ -6,10 +6,9 @@ from . import tostring
 
 
 class RenderTemplateWidget(object):
-    """
-        Base template for every widget
+    """Base template for every widget
         Enables the possibility of rendering a template
-         inside a template with run time options
+        inside a template with run time options
     """
     template = 'appbuilder/general/widgets/render.html'
     template_args = None

@@ -17,11 +17,18 @@ CACHE_ACCOUNTS = None
 
 
 def clear_accounts_cache():
+    """Delete all cached accounts from CACHE_ACCOUNTS"""
     global CACHE_ACCOUNTS
     CACHE_ACCOUNTS = None
 
 
 def getMenuInfo():
+    """ Get information about the currently selected Account and add all accounts of the current wallet and saves it
+        in CACHE_ACCOUNTS
+
+        :returns: Dictionary of information about the currently selected Account such as the accounts assoiciated to the current wallet \
+        number of open transactions
+    """
     try:
         account = Node().getSelectedAccount()
         accountDict = {

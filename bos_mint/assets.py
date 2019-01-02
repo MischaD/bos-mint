@@ -2,7 +2,7 @@ import os
 from flask_assets import Bundle, Environment
 from . import app
 
-# Assets
+#: webassets
 webassets = Environment(app)
 webassets.load_path = [
     os.path.join(os.path.dirname(__file__), "static"),
