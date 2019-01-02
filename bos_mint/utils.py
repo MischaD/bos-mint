@@ -242,6 +242,22 @@ def getTitle(typeName):
 
 
 def strfdelta(time, fmt):
+    """Calls fmt. `format() <https://docs.python.org/3.4/library/functions.html#format>`_
+    with the amount of days, hours, minutes and seconds that have elapsed since time.
+    If the time object already has the attribute days, the function returns a string \
+    of this time instead.
+
+    :param time: datetime.timedelta object or string in the format \
+        "%Y-%m-%dT%H:%M:%S"
+    :param fmt: formatter
+    :return: String representation of time elapsed since `time` in the specified `fmt`
+
+    .. code-block:: python
+
+        #Days that have elapsed since the first day in 2018, noon
+        strfdelta('2018-01-01T12:00:00', 'Days elapsed: {days}')
+        >> "Days elapsed: 366"
+    """
     if not hasattr(time, "days"):  # dirty hack
         now = datetime.now()
         if isinstance(time, str):
@@ -255,6 +271,10 @@ def strfdelta(time, fmt):
 
 
 def wallet_required(f):
+    """Wrapper function, that can be used to make sure the user has already created a wallet.
+    The user gets redirected to the new wallte page if he hasn't, otherwise the
+    decoreated function is executed
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not Node().wallet_exists():
@@ -268,6 +288,11 @@ def wallet_required(f):
 
 
 def unlocked_wallet_required(f):
+    """Wrapper function that verifies that the user has an unlocked wallet.
+    Implies :func:`wallet_required`.
+    The user either gets redirected to the unlock wallet page, or the decorated \
+    function is executed.
+    """
     @wraps(f)
     @wallet_required
     def decorated_function(*args, **kwargs):
@@ -282,9 +307,9 @@ def unlocked_wallet_required(f):
 
 
 def render_template_menuinfo(tmpl_name, **kwargs):
-    """
-    If there is a general error in rendering, simply return a 500 error.
-    Must be robust to connection lost.
+    """Renders the menu info template at the top of the page.
+    If there is a general error in rendering, it simply returns a 500 error.
+    Must be robust to connection loss.
 
     :param tmpl_name: name of the template to be rendered
     :type tmpl_name: str

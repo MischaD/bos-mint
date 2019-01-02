@@ -10,7 +10,7 @@ from .node import Node, ApiServerDown
 # app.register_blueprint(referral, url_prefix="/referral")
 # app.register_blueprint(wallet, url_prefix="/wallet")
 
-# Config markdown
+#: Markdown object
 markdown = Markdown(
     app,
     extensions=['meta',
@@ -23,6 +23,16 @@ markdown = Markdown(
 
 @app.template_filter('datetime')
 def _jinja2_filter_datetime(date, fmt=None):
+    """A template Filter that is used to change the presentation of date variables in Jinja
+
+    :param date: Date to be parsed to :func:`.strfdelta`. Returns "unknown" \
+        if none is given
+    :param fmt: Define what format you want the date to be in (See also: \
+        `format() <https://docs.python.org/3.4/library/functions.html#format>`_)
+    :type fmt: str
+
+    """
+
     if not date:
         return "unkown"
     if fmt:

@@ -1,8 +1,7 @@
 bos\_mint\.utils module
 =======================
 
-.. TODO what does this module do ?
-
+This Module provides all kinds of functions that are used all over Bos-Mint.
 Additionally utils saves a bunch of dictionaries with useful data about the different \
 typenames, it's parent/child relationships, identifiers and available operations, namely:
 
